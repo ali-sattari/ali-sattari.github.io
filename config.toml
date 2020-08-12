@@ -10,7 +10,7 @@ pygmentsstyle = "vs"
 pygmentscodefences = true
 pygmentscodefencesguesssyntax = true
 
-#googleAnalytics = "UA-123-45"
+googleAnalytics = "UA-101616403-1"
 #disqusShortname = "ink-demo"
 
 [params]
@@ -61,4 +61,4 @@ icon = "rss"
 url = "/index.xml"
 
 [taxonomies]
-   tag = "tags"
+  tag = "tags"
