@@ -1,0 +1,8 @@
+code {
+  background-color: #f2f2f2;
+  padding: 2px 5px;
+}
+pre > code {
+  background-color: transparent;
+  padding: 0;
+}

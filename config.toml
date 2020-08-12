@@ -13,6 +13,9 @@ pygmentscodefencesguesssyntax = true
 googleAnalytics = "UA-101616403-1"
 #disqusShortname = "ink-demo"
 
+[permalinks]
+  posts = "/:year/:slug"
+
 [params]
 	subtitle = "Musings about technology, books and skepticism!"
 
@@ -25,7 +28,7 @@ googleAnalytics = "UA-101616403-1"
 	featherIconsCDN = true
 
 	mode = "auto" # "dark" or "auto"
-	# customCSS = "css/custom.css"  # Custom CSS applied to default styles.
+	customCSS = "css/custom.css"  # Custom CSS applied to default styles.
 	# customDarkCSS = "css/custom-dark.css"  # Custom styles applied to dark mode css.
 	# customJS = ["js/custom.js", "js/custom1.js"]  # Custom JS scripts.
 
@@ -62,3 +65,4 @@ url = "/index.xml"
 
 [taxonomies]
   tag = "tags"
+  category = "categories"
