@@ -14,7 +14,7 @@ googleAnalytics = "UA-101616403-1"
 #disqusShortname = "ink-demo"
 
 [permalinks]
-  posts = "/:year/:slug"
+  posts = "/posts/:year/:slug"
 
 [params]
 	subtitle = "Musings about technology, books and skepticism!"
