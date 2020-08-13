@@ -1,7 +1,6 @@
 ---
 title: "Alerting issues with Alertmanager"
 date: 2020-08-13T09:00:00+02:00
-draft: true
 tags: [prometheus,alertmanager,alerting]
 categories: [technology]
 ---
