@@ -1,12 +1,16 @@
 ---
-title: "Duplicate and flipping alert issues with Alertmanager"
-date: 2020-08-10T17:22:35+02:00
+title: "Alerting issues with Alertmanager"
+date: 2020-08-13T09:00:00+02:00
 draft: true
 tags: [prometheus,alertmanager,alerting]
-categories: ["technology"]
+categories: [technology]
 ---
 
-So you are running your monitoring stack with Prometheus and Alertmanager, and since you are someone with proper reliability in mind, you have a cluster of at least three Alertmanagers, perfect! Perhaps this works for a while with no issues, but entropy and chaos are always on the hunt. It is not that no alerts come through or all instances are down, it works but with some occasional annoyances: alerts flipping or receiving duplicate notification of a state. As you might have experienced, blackouts are relatively easy to fix, brownouts, on the other hand, are often elusive and hard to resolve.
+Alerting is a vital part of operations, as it frees humans from watching systems and let them tend to more creative and constructive activities, until something breaks... at 3 am, but then resolves in few minutes, then fires again 10 minutes later, and that's when you know alerting isn't working properly!
+
+<!--more-->
+
+You are running your monitoring stack with Prometheus and Alertmanager, and since you are someone with proper reliability in mind, you have a cluster of at least three Alertmanagers, perfect! Perhaps this works for a while with no issues, but entropy and chaos are always on the hunt. It is not that no alerts come through or all instances are down, it works but with some occasional annoyances: alerts flipping or receiving duplicate notification of a state. As you might have experienced, blackouts are relatively easy to fix, brownouts, on the other hand, are often elusive and hard to resolve.
 
 Let's define the issues. Flipping happens when an alert goes into firing and resolved state repeatedly in a short window of time, like triggering again right after it was resolved a few minutes ago. This can be misleading, you want to rely on the alert state to some extent to triage issues or to decide whether you should get out of the bed at 3 am, and when alerts flip, that trust is quickly eroded. Duplicate notifications are notifications delivered more than once while the situation that triggered the alert is still ongoing. They add to the noise and chaos, you might have a Slack channel for your alerts and prefer to have a clear view of last notifications in that stream, duplicates mess that up. So in a sense flipping is the more serious of the two, but both are annoying.
 
@@ -32,7 +36,7 @@ Alertmanager in [cluster mode](https://github.com/prometheus/alertmanager#high-a
 * `alertmanager_peer_position` shows where each instance stands, this should also be a fixed number per instance through time except when one is rescheduled and the positions might reshuffle.
 
 ## Useful alerts on alerting!
-Let's say you have found and fixed the issues, now all run perfectly and faith in alerting is restored, a great accomplishment. But then there is always entropy! This can happen again: a version upgrade, change in CI/CD pipelines, IaC refactoring, adding features, or new integrations to the system? who knows, someday someone or something might inadvertently ruin this beautiful setup. How to guard against it? changing the profession is always an option, but luckily there is also alerting! :mindblown: so meta! isn't it?
+Let's say you have found and fixed the issues, now all run perfectly and faith in alerting is restored, a great accomplishment. But then there is always entropy! This can happen again: a version upgrade, change in CI/CD pipelines, IaC refactoring, adding features, or new integrations to the system? who knows, someday someone or something might inadvertently ruin this beautiful setup. How to guard against it? changing the profession is always an option, but luckily there is also alerting! so meta! isn't it?
 
 ### Changes in cluster members
 If this holds true for ~10m you have a problem in your Alertmanager cluster.
