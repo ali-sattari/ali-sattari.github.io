@@ -15,7 +15,6 @@ googleAnalytics = "UA-101616403-1"
 
 [permalinks]
   posts = "/:year/:slug"
-  pages = "/:slug"
 
 [params]
 	subtitle = "Musings about technology, books and skepticism!"
