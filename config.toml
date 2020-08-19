@@ -59,6 +59,16 @@ icon = "twitter"
 url = "https://twitter.com/ali_sattari"
 
 [[params.social]]
+name = "Goodreads"
+icon = "book-open"
+url = "https://www.goodreads.com/user/show/4719513-ali-sattari"
+
+[[params.social]]
+name = "LinkedIn"
+icon = "linkedin"
+url = "https://www.linkedin.com/in/alisattari/"
+
+[[params.social]]
 name = "RSS"
 icon = "rss"
 url = "/index.xml"
