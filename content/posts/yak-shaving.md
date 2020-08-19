@@ -1,6 +1,8 @@
 ---
 title: "Axe Sharpening or Yak Shaving?"
 date: 2020-08-19T08:09:10+02:00
+tags: [preparation,meta]
+categories: [technology]
 ---
 
 We often use many tools in our everyday activities. Tools enable us to be faster and more precise while allowing us to engage issues at higher levels. Using tools we are leveraging other people’s innovation and could stand on the shoulder of giants to gaze further horizons. This is so fundamental that knowing one's toolset in and out is considered a sign of mastery or expertise in most crafts. By now you are thinking what is the catch? Tools are not always ready for our objective, we usually need to choose, gather and even tinker with the tools, and this is where the good, bad and ugly enter!
