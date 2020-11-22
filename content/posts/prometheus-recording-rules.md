@@ -6,21 +6,23 @@ draft: true
 
 Overtime the use case for recording rules have changed a lot, we no longer need to use it to compensate for lack of sub-query for example. But how should they be used really? Here is my 2cents on the matter.
 
-## Complex (but reasonably fast) queries
+## Sensible Use Cases
+
+### Complex (but reasonably fast) queries
 
 This is primarily when you want to hide the complexity of using multiple, often nested queries to get a sensible value out. There are cases that current PromQL doesn't even allow subqueries. This especially helps for alerting expressions, you want to keep it simple and manageable for cases (like multi-thingy mentioned below). If your expression is fast enough, the extra computing resource and storage is often justified.
 
-## Aggregation and rollup for high cardinality metrics
+### Aggregation and rollup for high cardinality metrics
 
-There are numerous cases where a service or application exposes too much data (e.g many labels) and you want to reduce that to those you need for regular use. You should beware that if you have control over these exposed metrics, it is much better to reduce cardinality at the source. There are also metric relabeling configs that can drop/merge metrics after scrape and before saving. If all those are unavailable to you, recording rules are a good alternative.
+There are numerous cases where a service or application exposes too much data (i.e many labels) and you want to reduce that to those you need for regular use. You should beware that if you have control over these exposed metrics, it is much better to reduce cardinality at the source. There are also metric relabeling configs that can drop/merge metrics after scrape and before saving. If all those are unavailable to you, recording rules are a good alternative.
 
-## Multi-window multi-burn-rate alerts
+### Multi-window multi-burn-rate alerts
 
-So you have joined the movement and identify as an SRE now, great! Those alerts need to compare and AND/OR a lot of expressions to work while using raw expressions is possible, it is not a good sight and soon becomes hard to read, debug, and maintain. Use recording rules for those expressions and get some peace of mind. However beware that you won’t or shouldn’t need a range greater than 1d for any expression in those rules since you would be alerting against the slope of burn rate, not the actual cumulative value.
+So you have joined the movement and identify as an SRE now, great! Those alerts need to compare and combine a lot of expressions to work. While using raw expressions is possible, it is not a good sight and soon becomes hard to read, debug, and maintain. Use recording rules for those expressions and get some peace of mind. However beware that you won’t or shouldn’t need a range greater than 1d for any expression in those rules since you would be alerting against the slope of burn rate, not the actual cumulative value.
 
-## Because you want to and no one can tell you otherwise
+### Because you want to and no one can tell you otherwise
 
-Okay, whatever, but eat your veggies at least! And be prepared to see some gaps as your heavy recording rule might fail to eval in time, and maybe read below as well plz.
+Okay, whatever, but eat your veggies at least! And be prepared to see some gaps as your heavy recording rule might fail to evaluate in time.
 
 ## What to do for dearly needed heavy recording rules
 
