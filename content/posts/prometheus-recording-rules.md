@@ -18,7 +18,7 @@ There are numerous cases where a service or application exposes too much data (i
 
 ### Multi-window multi-burn-rate alerts
 
-So you have joined the movement and identify as an SRE now, great! Those alerts need to compare and combine a lot of expressions to work. While using raw expressions is possible, it is not a good sight and soon becomes hard to read, debug, and maintain. Use recording rules for those expressions and get some peace of mind. However beware that you won’t or shouldn’t need a range greater than `3d` for any expression in those rules since you would be alerting against the slope of burn rate, not the actual cumulative value. This might be less of a usecase if you use tools like [Sloth](https://github.com/slok/sloth).
+So you have joined the movement and identify as an SRE now, great![^2] Those alerts need to compare and combine a lot of expressions to work. While using raw expressions is possible, it is not a good sight and soon becomes hard to read, debug, and maintain. Use recording rules for those expressions and get some peace of mind. However beware that you won’t or shouldn’t need a range greater than `3d` for any expression in those rules since you would be alerting against the slope of burn rate, not the actual cumulative value. This might be less of a usecase if you use tools like [Sloth](https://github.com/slok/sloth).
 
 ## What to do for dearly needed heavy recording rules
 
@@ -36,3 +36,5 @@ Yes, we are all familiar with this kind of compromise, opting for the second bes
 
 
 [^1]: This is documented under [sub queries section](https://prometheus.io/docs/prometheus/latest/querying/basics/#subquery) in official
+
+[^2]: Don't worry if you haven't, [here](https://sre.google/workbook/alerting-on-slos/) is a reference to familiriaze yourslef with the concept.
