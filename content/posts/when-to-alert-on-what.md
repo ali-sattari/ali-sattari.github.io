@@ -1,5 +1,5 @@
 ---
-title: "When to alert on what?"
+title: "When to Alert on What?"
 date: 2023-01-14T09:10:11+02:00
 tags: [sre,alerting]
 categories: [technology]
