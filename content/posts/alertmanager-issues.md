@@ -65,4 +65,4 @@ rate(alertmanager_alerts_received_total{status="firing"}[10m])
 [^3]: As result of a binary comparison or as a non-empty result (a vector)
 [^4]: My personal rule of thumb is to have it 3-4x of eval interval
 [^5]: Basically any alert client for that matter, e.g Thanos Rule.
-[^6]: Suprisingly this can't be found in Prometheus or Alertmanager documentation, but is mentioned in [this blog post](https://www.robustperception.io/high-availability-prometheus-alerting-and-notification) and also in [CoreOS docs](https://coreos.com/operators/prometheus/docs/latest/high-availability.html#alertmanager) 
+[^6]: Surprisingly this can't be found in Prometheus or Alertmanager documentation, but is mentioned in [this blog post](https://www.robustperception.io/high-availability-prometheus-alerting-and-notification) and also in [CoreOS docs](https://coreos.com/operators/prometheus/docs/latest/high-availability.html#alertmanager) 
