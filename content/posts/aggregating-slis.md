@@ -1,7 +1,6 @@
 ---
 title: "Aggregating SLIs"
-date: 2024-08-20T21:08:41+02:00
-draft: true
+date: 2024-08-28T12:13:14+00:00
 tags: [sre,sli]
 categories: [technology]
 ---
