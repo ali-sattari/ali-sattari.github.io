@@ -1,11 +1,25 @@
 code {
-  background-color: #f2f2f2;
-  padding: 2px 5px;
+    background-color: #f2f2f2;
+    padding: 2px 5px;
 }
 html.dark code {
-  background-color: #333;
+    background-color: #333;
 }
 pre > code {
-  background-color: transparent;
-  padding: 0;
+    background-color: transparent;
+    padding: 0;
 }
+blockquote {
+    font-family: inherit;
+    font-size: inherit;
+    font-style: inherit;
+    background-color: #f6f6f6;
+    padding-top: 1px;
+    padding-bottom: 1px;
+}
+blockquote > p {
+    margin: 10px 0;
+}
+html.dark blockquote {
+    background-color: #202020;
+}25px

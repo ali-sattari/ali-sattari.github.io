@@ -64,9 +64,9 @@ icon = "twitter"
 url = "https://twitter.com/ali_sattari"
 
 [[params.social]]
-name = "Goodreads"
+name = "Hardcover"
 icon = "book-open"
-url = "https://www.goodreads.com/user/show/4719513-ali-sattari"
+url = "https://hardcover.app/@ali.sattari"
 
 [[params.social]]
 name = "LinkedIn"
