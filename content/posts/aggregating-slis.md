@@ -28,17 +28,17 @@ This means taking each data point (e.g. HTTP requests), and summing them for num
 ### Weighted average
 
 This is about averaging the percentages, first simply by assuming equal weight for all. Equal weights would put more emphasis on each defined SLI rather than each event. Calculation is done by summing each indicator (percentage) and dividing by count of indicators. A more sophisticated approach is needed if SLIs differ widely in their impact, for that we assign weights to individual SLIs based on their impact, and calculate a weighted average.
-    
+
 >💡 An obvious shortcoming of this method is what statisticians call “compensability among indicators”, meaning that with averages higher indicators can compensate for lower ones and hiding flaws. Geometric average is what is often used as an easy remedy to prevent compensability, but I felt it is too complex for SLIs to include here.
 
-    
+
 ### Percentiles
 
-Instead of averages, use percentiles (e.g., p50, p95) to account for potential outliers that could skew the results. This makes more sense for visualisations such as [**box plots**](https://en.wikipedia.org/wiki/Box_plot) to show the range of values in a population that can also be compared with relative ease.
+Instead of averages, use percentiles (e.g., p50, p95) to account for potential outliers that could skew the results. This makes more sense for visualisations such as [box plots](https://en.wikipedia.org/wiki/Box_plot) to show the range of values in a population that can also be compared with relative ease.
 
 ### Count of SLO Compliance
 
-Count the number of services meeting their SLO targets to assess the overall reliability of the organisation, simple shown as `n/m` figure over a table, ideally with a simple `↘/-/↗` to show change over past period. This is what Google also suggests in [their SRE workbook](https://sre.google/workbook/implementing-slos/#slo-compliance-report).
+Count the number of services meeting their SLO targets to assess the overall reliability of the organisation, simple shown as `{count of compliant SLOs} / {total SLOs}` figure over a table, ideally with a simple `↘/-/↗` to show change over past period. This is what Google also suggests in [their SRE workbook](https://sre.google/workbook/implementing-slos/#slo-compliance-report).
 
 ## Start simple, Iterate regularly
 
@@ -51,7 +51,7 @@ On each iteration you should look at two broad areas: your SLIs and your audienc
 
 ## What about a target (SLO) for now aggregated SLIs?
 
-SLIs are useful indicators on their own, specially if we look at their trend over time like month over month, as such there is no immediate need for a target when we aggregate SLIs into one indicator. Many times we might want to even resist the urge to set a target for such aggregated SLI to avoid the [Goodhart’s trap](https://en.wikipedia.org/wiki/Goodhart%27s_law). But if we absolutely must, the simpler way is to set a new target for the aggregate SLI, using historical data and business needs as input. A more complicated approach can be calculating a composite SLO, beautifully described [here](https://alexewerlof.medium.com/calculating-composite-sla-d855eaf2c655) in details. This approach makes more sense for service level aggregate SLIs, than for product or org level ones.
+SLIs are useful indicators on their own<sup>[citation needed]</sup>, specially if we look at their trend over time like month over month, as such there is no immediate need for a target when we aggregate SLIs into one indicator. Many times we might want to even resist the urge to set a target for such aggregated SLI to avoid the [Goodhart’s trap](https://en.wikipedia.org/wiki/Goodhart%27s_law). But if we absolutely must, the simpler way is to set a new target for the aggregate SLI, using historical data and business needs as input. A more complicated approach can be calculating a composite SLO, beautifully described [here](https://alexewerlof.medium.com/calculating-composite-sla-d855eaf2c655) in details. This approach makes more sense for service level aggregate SLIs, than for product or org level ones.
 
 ## Resources
 
