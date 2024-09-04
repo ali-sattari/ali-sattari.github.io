@@ -6,6 +6,8 @@ categories: [technology]
 ---
 With a great number of SLIs come great ~~responsibility~~ aggregation issues. While aggregation provides more readability in overviews, it also inadvertently hides nuances and details. Our aim should be to propose a sensible aggregation method that ensures we extract the most valuable insights, with a promise to review it often in order to keep it fit.
 
+<!--more-->
+
 ## When do you need to aggregate?
 
 Leaders managing large organisations, which often include many services and lots of SLIs, usually ask for overview dashboards and reports. Dashboards can give a sense of how systems are doing at a glance, and reports can show how systems are doing overtime. Is some service (as a whole) having subpar reliability month over month? Are all indicators green while we are getting public complaints over social media? Answering these questions with some rough confidence requires single (or very few) numbers, not all the detailed SLIs of the underlying services. To get to such an overview, we might need to aggregate SLIs per service, per product, or sometimes at the organization level. The leadership asks are valid concerns with high-level aims of resource allocation and planning; how we respond to that ask can make a lot of difference in what view we provide.
