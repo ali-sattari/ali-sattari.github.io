@@ -52,7 +52,7 @@ There are many similar stories in software development:
 You decide to use a ready-made script to automate some routine task on your laptop. That script requires the latest version of `lib_xyz`, which is few versions ahead of what you currently have. You start updating packages to get the library to the latest version, and you end up updating the kernel too. But heck, the VGA driver is flaky on the new kernel and you need to download and compile the latest driver from the vendor. You start installing the new driver that you realize `lib_yuw` needs updating too…
 
 And so on:
-{{&lt; figure src="https://imgs.xkcd.com/comics/automation.png" caption="[Automation by XKCD](https://xkcd.com/1319/)" &gt;}}
+{{< figure src="https://imgs.xkcd.com/comics/automation.png" caption="[Automation by XKCD](https://xkcd.com/1319/)" >}}
 
 ## What to do?
 

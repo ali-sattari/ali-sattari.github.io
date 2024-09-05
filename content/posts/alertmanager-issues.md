@@ -17,9 +17,9 @@ Let's define the issues. flapping happens when an alert goes into firing and res
 
 Like a good troubleshooter that you are, you would want to find the source of the problem! But to get to the source, you need to know the path.
 
-- Prometheus has the data (metrics and meta-metrics) and evaluates rules that are defined in the [configuration](https://prometheus.io/docs/prometheus/latest/configuration/alerting_rules/).
-- Both scraping and rule evaluation happens at regular, pre-defined intervals.
-- Prometheus evaluates the alert rule and if the `expr` returns `true` the alert goes into `pending` state for the duration defined by `for`, this is to help weed out the transient issues.
+- Prometheus has the data (metrics and meta-metrics)[^1] and evaluates rules that are defined in the [configuration](https://prometheus.io/docs/prometheus/latest/configuration/alerting_rules/).
+- Both scraping and rule evaluation happens at regular, pre-defined intervals[^2].
+- Prometheus evaluates the alert rule and if the `expr` returns `true`[^3] the alert goes into `pending` state for the duration defined by `for`, this is to help weed out the transient issues.
 - When the `for` duration is passed and `expr` still evals to `true`, the alert goes into `firing` state and is now sent to Alertmanager. This happens on all consequent eval intervals from this point until the `expr` no longer evals to `true`.
 - Meanwhile, there are a couple of intervals and waits configured in Alertmsnager as well, such as `group_interval` and `repeat_interval`. Alertmanager waits for `group_interval` to see if any further alerts come in with the same `group_by` criteria so they can be merged, and finally, a notification is generated, goes through [routing](https://prometheus.io/docs/alerting/latest/configuration/#route) and is sent to the intended [receivers](https://prometheus.io/docs/alerting/latest/configuration/#receiver).
 - Remember that Prometheus continues to fire alerts toward Alertmanager on `eval_interval` while the issue persists and after the initial notification, Alertmanager sends notification only on `repeat_interval` (so that a firing alert isn't forgotten) or when it is resolved. But when is an alert resolved in Alertmanager? There is a `resolve_timeout` in the configuration, if no alert is received by Prometheus in that duration the alert is considered resolved. Prometheus can also send resolved state (by setting the EndsAt timestamp).
@@ -28,9 +28,9 @@ How can you observe this process? good news is there is `ALERTS` metric exposed 
 
 ## How to find the source?
 
-Now that you know the flow, it is easier to look for the source of the problem. First thing is to check the alert `expr` and `ALERTS{alertname="YOUR_SHINY_ALERT"}` when flapping happens, if both are continuous graphs with no change of state, you know the alert rule definition is fine. If however, you see a lot of pending -&gt; firing in that window, you should look more closely at your alert definition. It can be the case that `for` is missing, which means no `pending` state, alert fires with the first eval to true. Or maybe `for` is too short or finally, the expression is at fault and fluctuates below and above a static threshold.
+Now that you know the flow, it is easier to look for the source of the problem. First thing is to check the alert `expr` and `ALERTS{alertname="YOUR_SHINY_ALERT"}` when flapping happens, if both are continuous graphs with no change of state, you know the alert rule definition is fine. If however, you see a lot of pending -&gt; firing in that window, you should look more closely at your alert definition. It can be the case that `for` is missing, which means no `pending` state, alert fires with the first eval to true. Or maybe `for` is too short[^4] or finally, the expression is at fault and fluctuates below and above a static threshold.
 
-A subtle but important point is that the way Alertmanager cluster works, it expects Prometheus to send firing alerts to all Alertmanager instances. If however, Prometheus is only sending alerts to one instance (e.g they are behind an ingress or loadbalancer), the cluster doesn't get to do its job and each instance develops a brain of its own to some extent. So while one Alertmanager has recently received an alert from Prometheus, another one already thinks it is resolved (through `resolve_timout`) and sends out a resolved notification, and then receives the alert again and considers it a new alert and so on. Make sure Prometheus [points](https://prometheus.io/docs/prometheus/latest/configuration/configuration/#alertmanager_config) to all instances of the Alertmanager by static config or proper service discovery.
+A subtle but important point is that the way Alertmanager cluster works, it expects Prometheus[^5] to send firing alerts to all Alertmanager instances[^6]. If however, Prometheus is only sending alerts to one instance (e.g they are behind an ingress or loadbalancer), the cluster doesn't get to do its job and each instance develops a brain of its own to some extent. So while one Alertmanager has recently received an alert from Prometheus, another one already thinks it is resolved (through `resolve_timout`) and sends out a resolved notification, and then receives the alert again and considers it a new alert and so on. Make sure Prometheus [points](https://prometheus.io/docs/prometheus/latest/configuration/configuration/#alertmanager_config) to all instances of the Alertmanager by static config or proper service discovery.
 
 Alertmanager in [cluster mode](https://github.com/prometheus/alertmanager#high-availability) uses a separate port to connect instances to identify peers and communicate events. If `--cluster.*` parameters aren't properly set, a quorum can't form, and deduplication and state sync won't happen. This can be observed both in logs and in metrics exposed by Alertmanager:
 
@@ -65,3 +65,10 @@ abs(
 rate(alertmanager_alerts_received_total{status="firing"}[10m])
 * 100 > 5
 ```
+
+[^1]: Such as `up` which provides data about the scrape target in a pull model. [ref](https://prometheus.io/docs/concepts/jobs_instances/#automatically-generated-labels-and-time-series)
+[^2]: As `evaluation_interval` in main Prometheus [config](https://prometheus.io/docs/prometheus/latest/configuration/configuration/#configuration-file)
+[^3]: As result of a binary comparison or as a non-empty result (a vector)
+[^4]: My personal rule of thumb is to have it 3-4x of eval interval
+[^5]: Basically any alert client for that matter, e.g Thanos Rule.
+[^6]: Surprisingly this can't be found in Prometheus or Alertmanager documentation, but is mentioned in [this blog post](https://www.robustperception.io/high-availability-prometheus-alerting-and-notification) and also in [CoreOS docs](https://coreos.com/operators/prometheus/docs/latest/high-availability.html#alertmanager)

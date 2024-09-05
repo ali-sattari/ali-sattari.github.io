@@ -5,7 +5,7 @@ tags: [sre,alerting]
 categories: [technology]
 ---
 
-We have all been there when we go into a new company or team, looking at their stack and especially alerting, and something feels a bit ... off? This is an honest attempt to categorize alerting into some bands or levels to make it easier to reason about where things are and have a glimpse at the road ahead. Or, in other words, to put words on those vague feelings. The levels aren't meant to be followed in sequence; some can be skipped, others not. Moreover, this is by no means a yet-another-maturity-model; use it as such at your own risk. The end goal of any alert is (besides being actionable) to detect problems affecting your users fast enough without being too trigger-happy<sup>\[citation needed\]</sup>.
+We have all been there when we go into a new company or team, looking at their stack and especially alerting, and something feels a bit ... off? This is an honest attempt to categorize alerting into some bands or levels to make it easier to reason about where things are and have a glimpse at the road ahead. Or, in other words, to put words on those vague feelings. The levels aren't meant to be followed in sequence; some can be skipped, others not. Moreover, this is by no means a yet-another-maturity-model[^1]; use it as such at your own risk. The end goal of any alert is (besides being actionable) to detect problems affecting your users fast enough without being too trigger-happy<sup>\[citation needed\]</sup>.
 
 <!--more-->
 
@@ -23,15 +23,15 @@ This has its benefits: no overhead of implementing and maintaining a monitoring 
 
 > tl;dr when service runs on one or two dedicated nodes.
 
-System metrics here refer to basic operating system resources, like CPU, memory, disk, and network usage. Load average in \*nix systems is also a viable source. Monitoring them and alerting against them is often easy; there are a lot of single-binary agents to collect these, and understanding them isn't that difficult, as you would be mostly dealing with percentages.
+System metrics here refer to basic operating system resources, like CPU, memory, disk, and network usage. Load average in \*nix systems is also a viable source[^2]. Monitoring them and alerting against them is often easy; there are a lot of single-binary agents to collect these, and understanding them isn't that difficult, as you would be mostly dealing with percentages.
 
-Sometimes system metrics and alerting based on them are seen as this legend of ancient times when baremetals and servers as pets were the thing. They can still make sense if you only have one or a few hosts running your services, then system metrics can correlate well with service quality (in cases other than logical issues) and are much easier to monitor. But once you have some redundancy in your system, when saturation of one host's resources doesn't immediately impact user experience, this mode stops being useful and quickly becomes noisy.
+Sometimes system metrics and alerting based on them are seen as this legend of ancient times when baremetals and servers as pets[^3] were the thing. They can still make sense if you only have one or a few hosts running your services, then system metrics can correlate well with service quality (in cases other than logical issues) and are much easier to monitor. But once you have some redundancy in your system, when saturation of one host's resources doesn't immediately impact user experience, this mode stops being useful and quickly becomes noisy.
 
 ## L2: Alerting on Service Metrics
 
 > tl;dr when service has some observability, and serves only a handful of endpoints.
 
-Monitoring a service's outward interactions is what is often meant by service metrics; for APIs, this would be HTTP response code and response latency. This is already a few steps close to user experience, and it takes the degradation of dependencies into account. These are best observed from a load-balancer point of view and aggregated across all (identical) instances serving traffic. You might choose to group by HTTP verb or path, but that's often the extent to which they get detailed.
+Monitoring a service's outward interactions is what is often meant by service metrics; for APIs, this would be HTTP response code and response latency. This is already a few steps close to user experience, and it takes the degradation of dependencies into account. These are best observed from a load-balancer point of view and aggregated across all (identical) instances serving traffic. You might choose to group by HTTP verb or path[^4], but that's often the extent to which they get detailed.
 
 Once your service has some instrumentation and basic observability going on, this would be an obvious choice. This fits the most when your service has few endpoints and only one or two user journeys. Once user journeys start to get more complex and involve multiple calls to different endpoints, this stops being useful; for example, traffic at some endpoints might hide some issues at other lower-traffic endpoints.
 
@@ -41,13 +41,13 @@ Once your service has some instrumentation and basic observability going on, thi
 
 At some point in time, you might start the SRE journey, and defining SLIs is one of the first steps. You are getting familiar with the landscape and just started defining user journeys and focusing on customer happiness as the key metric for service reliability. You end up with a few SLIs for your service and alerting against that with a fixed (percentage) threshold can provide value. It is not the best of the SRE world yet, as it can be noisy at times, but this will provide a smoother transition to the next level.
 
-This makes sense when your service has found product-market fit, has a stable set of user journeys, and is out of the valley of death, so it is there to stay and is beginning to scale. This is when you feel the need to prioritize between different user journeys (that translates into a different set of endpoints on your API perhaps), instead of blanket treating all requests to your service the same.
+This makes sense when your service has found product-market fit, has a stable set of user journeys, and is out of the valley of death[^5], so it is there to stay and is beginning to scale. This is when you feel the need to prioritize between different user journeys (that translates into a different set of endpoints on your API perhaps), instead of blanket treating all requests to your service the same.
 
 ## L4: Alerting on remaining Error Budget
 
 > tl;dr when SLI and SLO are set for the service, and an Error Budget Policy document exists.
 
-Once you continue in the SRE journey, you will inevitably get to Error Budgets; in short, it describes how much an SLI can fail (be below SLO) and still be considered fine. This is a step extra on top of alerting on SLI since you don't care about every time your SLI dropped below a threshold; what you care about is how much of the budget still remains. In this sense, a low but constant rate of error won't trigger an alert, as long as it is within budget. This results in a much less trigger-happy alerting condition<sup>\[citation needed\]</sup>.
+Once you continue in the SRE journey, you will inevitably get to Error Budgets[^6]; in short, it describes how much an SLI can fail (be below SLO) and still be considered fine. This is a step extra on top of alerting on SLI since you don't care about every time your SLI dropped below a threshold; what you care about is how much of the budget still remains. In this sense, a low but constant rate of error won't trigger an alert, as long as it is within budget. This results in a much less trigger-happy alerting condition<sup>\[citation needed\]</sup>.
 
 Having error budget alerting makes sense when you have SLIs and SLOs established for your service and also have an error budget policy in place. The first part is about getting comfortable with the process and terminology without overburdening the team. And having an error budget policy means all stakeholders have agreed on the consequences of a depleted budget. You could skip the previous level and once you have your SLI and SLO jump into alerting based on EB, but I advise you to do so only if it is not the first time for the team.
 
@@ -57,4 +57,12 @@ Having error budget alerting makes sense when you have SLIs and SLOs established
 
 Just when you thought you were at the peak of the alerting hierarchy, yet another one hits you! You often don't want to let the budget burn through to take action; you want to get alerted if it is burning too fast but also recover the alert state quickly once the burning stops. This is where multi-window, multi-burn-rate alerting against the rate of error budget burn comes into the picture. It is described in good detail [here](https://sre.google/workbook/alerting-on-slos/#6-multiwindow-multi-burn-rate-alerts), so I won't go through the whys and hows here.
 
-This level of alerting makes sense for a service that is mature enough feature-wise, has its architecture fit for SLO and receives a high volume of traffic around the clock. It also requires good knowledge of alerting and an SRE mindset within the team to create and maintain such alerts (yes, the expressions can get... ugly). This is, if the previous criteria match, the height of alerting for a service, in my opinion. It has the least amount of noise, is often pretty actionable, and doesn't hide away re-occurring issues.
+This level of alerting makes sense for a service that is mature enough feature-wise, has its architecture fit for SLO[^7] and receives a high volume of traffic around the clock. It also requires good knowledge of alerting and an SRE mindset within the team to create and maintain such alerts (yes, the expressions can get... ugly). This is, if the previous criteria match, the height of alerting for a service, in my opinion. It has the least amount of noise, is often pretty actionable, and doesn't hide away re-occurring issues.
+
+[^1]: Nothing against them, they can be pretty useful when utilized correctly: https://martinfowler.com/bliki/MaturityModel.html
+[^2]: Can be tricky to reason about though: https://www.brendangregg.com/blog/2017-08-08/linux-load-averages.html
+[^3]: I spent 5 minutes looking for a good source to explain this without all the VC bullshit, but didn't succeed, Google it yourself and pick one that suits you!
+[^4]: More on that in Google's SRE book: https://sre.google/sre-book/embracing-risk/#id-na2u1S2SKi1-marker
+[^5]: The more 9s the more redundancy, right?
+[^6]: Good intro if you are not familar with pet vs cattle analogy: https://cloudscaling.com/blog/cloud-computing/the-history-of-pets-vs-cattle/#understanding-pets-and-cattle
+[^7]: In Prometheus world it would be something like `sum by(path) (http_server_requests_total{app="my-shiny-app", method="post"})`

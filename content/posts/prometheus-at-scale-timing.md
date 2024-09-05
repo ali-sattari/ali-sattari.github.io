@@ -7,15 +7,15 @@ categories: [technology]
 
 The story begins a few weeks or months after you have had the epiphany to scale out your Prometheus setup with Thanos. The new setup runs smoothly for a while with default parameters and you can shovel more resources from time to time to improve the performance. Such beautiful and simple times will soon be gone; one day you wake up to the reality that some heavy queries are taking most of the resources and grinding the whole system to a halt under load. The way these issues manifest is often through slowness and unresponsiveness of the whole system, which eventually can recover on it's own but take long time.
 
-But why this happen? two things are inevitable: users and chaos. Users of your system might hate you, themselves or the whole system and put a heavy query in a Grafana dashboard with `5s` refresh interval just for the heck of it. Most cloud computing environments nowadays are well-known agents of chaos, Your applications can and will get rescheduled for variety of reasons, especially if you are cost conscious and opt to use cheaper machines like [GCP preemptible](https://cloud.google.com/compute/docs/instances/preemptible) or [AWS Spot](https://aws.amazon.com/ec2/spot/) for your workloads. Thanos components [rely on each other](https://thanos.io/tip/thanos/service-discovery.md/#service-discovery) and wait for some time to drop an unresponsive peer out of their list. Combine all of these and you get the picture: heavy queries or chaos kills a component; other components still wait for it for a long time before giving up and hence slow down the whole system. This gets especially bold in the fan-out model of Thanos query.
+But why this happen? two things are inevitable: users and chaos[^2]. Users of your system might hate you, themselves or the whole system[^1] and put a heavy query[^3] in a Grafana dashboard with `5s` refresh interval just for the heck of it. Most cloud computing environments[^4] nowadays are well-known agents of chaos, Your applications can and will get rescheduled for variety of reasons, especially if you are cost conscious and opt to use cheaper machines like [GCP preemptible](https://cloud.google.com/compute/docs/instances/preemptible) or [AWS Spot](https://aws.amazon.com/ec2/spot/) for your workloads. Thanos components [rely on each other](https://thanos.io/tip/thanos/service-discovery.md/#service-discovery) and wait for some time to drop an unresponsive peer out of their list. Combine all of these and you get the picture: heavy queries or chaos kills a component; other components still wait for it for a long time before giving up and hence slow down the whole system. This gets especially bold in the fan-out model[^5] of Thanos query.
 
 ## The Parameters
 
 For a quick recap, in a [multi-cluster setup](https://banzaicloud.com/blog/multi-cluster-monitoring/#metric-query-flow), you would be having at least these set of components:
 
-- Thanos Sidecar: to upload TSDB blocks and also respond to queries for fresh data
+- Thanos Sidecar: to upload TSDB blocks and also respond to queries for fresh[^6] data
 - Thanos Store: to serve the previously uploaded TSDB blocks
-- Thanos Query: To connect these pieces together, do the [deduplication](https://thanos.io/tip/components/query.md/#deduplication) you were promised and provide a single endpoint for users
+- Thanos Query[^7]: To connect these pieces together, do the [deduplication](https://thanos.io/tip/components/query.md/#deduplication) you were promised and provide a single endpoint for users
 
 Tuning these parameters doesn't magically solve the issue; they help to minimize the blast radius of bad events when they happen.
 
@@ -37,7 +37,7 @@ This is the period that the gRPC server continues to listen when receives an int
 
 This applies to [query](https://thanos.io/tip/components/query.md/#flags), [store](https://thanos.io/tip/components/store.md/#flags) and [sidecar](https://thanos.io/tip/components/sidecar.md/#flags) components as `--grpc-grace-period` CLI flag.
 
-### Series Sample Limit
+### Series Sample Limit[^8]
 
 This flag on Thanos store limits the number of samples that a whole query (including subqueries) will touch. The number of samples can increase through cardinality and range of time. So a low cardinality metric for `60d` might touch a lot of samples, the same as a high cardinality metric over `1d` might. Why would this matter? because these are often heavy queries that are in dire need of optimization, either by rewriting the query expression or changing the metric from the source.
 
@@ -83,3 +83,13 @@ Global Query
 - `--query.timeout=5m`
 - `--store.response-timeout=10s`
 - `--grpc-grace-period=5s`
+
+
+[^1]: This can be seen if you graph query timing of your global view query or rule evaluation time of your Thanos Rule
+[^2]: yes yes, death and taxes, but imagine that Benjamin Franklin was an infrastructure engineer!
+[^3]: Fresh means whatever your Prometheus retention is set to. Minimum is usually two hours.
+[^4]: Most probably multiple layers of query, for local views and the global view.
+[^5]: This depends on [partial-response](https://thanos.io/tip/components/query.md/#partial-response) strategy of the asking component, but this often applies: https://paulcavallaro.com/blog/fanouts-and-percentiles/
+[^6]: Something like this with a high cardinality metric: `histogram_quantile(0.99, sum(rate(metric[28d])) by (le))`
+[^7]: Yes, this is not a timing parameter, but decided to tuck this one in as well.
+[^8]: Most notably Kubernetes, but you can imagine any cloud compute service.
