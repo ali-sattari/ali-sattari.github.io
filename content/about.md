@@ -2,6 +2,7 @@
 title: "About"
 type: "page"
 ---
+
 ## The Author
 
 No better way to learn about someone than to check out [the books they read](https://hardcover.app/@ali.sattari), or [the code they write](https://github.com/ali-sattari), right?
