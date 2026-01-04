@@ -1,3 +1,4 @@
 [submodule "themes/ink"]
 	path = themes/ink
 	url = git@github.com:knadh/hugo-ink.git
+	branch = main
